@@ -33,7 +33,7 @@ server.addService(movieService, {
   GetTicketDetails: (call, callback) => {
     const { ticketPrice } = call.request;
 
-    const encodedResponse = GetTicketDetailsResponse.encode({ticketPrice}).finish()
+    const encodedResponse = GetTicketDetailsResponse.encode({ticketPrice}).finish();
     console.log(encodedResponse);
     return callback(null, encodedResponse);
   },
@@ -44,9 +44,9 @@ server.bindAsync(
   grpc.ServerCredentials.createInsecure(),
   (error, port) => {
     if (error) {
-      console.log("Failed to connect to server ", error.cause)
+      console.log("Failed to connect to server ", error.cause);
     } else {
-      console.log(`Server listening at port ${port}`)
+      console.log(`Server listening at port ${port}`);
     }
   }
 );

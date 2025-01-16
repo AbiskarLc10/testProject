@@ -16,7 +16,7 @@ const main = () => {
       });
 
     if(err){
-        throw Error(err)
+        throw Error(err);
     }
     const request = GetTicketDetailsRequest.create({
         ticketPrice: {
