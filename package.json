@@ -3,11 +3,12 @@
     "prepare": "husky",
     "precommit": "eslint .",
     "eslint": "eslint .",
-    "eslint:fix": "eslint . --fix"
+    "eslint:fix": "eslint . --fix",
+    "test":"node test/test.js"
   },
   "devDependencies": {
     "eslint": "^9.18.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.4.1"
+    "lint-staged": "^1ck5.4.1"
   }
 }
