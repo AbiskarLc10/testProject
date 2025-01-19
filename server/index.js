@@ -6,38 +6,48 @@ const {
   USER_PROTO_PATH,
   MOVIE_PROTO_PATH,
   HOST_URL,
+  VIDEO_STREAM_PROTO_PATH,
 } = require("../config/config.js");
 
-
-
 const bundledProto = require("../proto/bundle.js");
+const StreamVideoFile = require("./service/video/stream-video.js");
 
-const GetTicketDetailsResponse = bundledProto.nested.movie.GetTicketDetailsResponse;
+const GetTicketDetailsResponse =
+  bundledProto.nested.movie.GetTicketDetailsResponse;
 
 const userProtoPath = path.resolve(MOVIE_PROTO_PATH);
 const movieProtoPath = path.resolve(USER_PROTO_PATH);
+const videoProtoPath = path.resolve(VIDEO_STREAM_PROTO_PATH);
 
 const packageDefinations = protoloader.loadSync(
-  [userProtoPath, movieProtoPath],
+  [userProtoPath, movieProtoPath, videoProtoPath],
   PROTO_LOADER_OPTIONS
 );
 
 const Proto = grpc.loadPackageDefinition(packageDefinations);
 
-
 const movieService = Proto.movie.MovieService.service;
+const videoService = Proto.stream.VideoStreamService.service;
 
+console.log(videoService);
 const server = new grpc.Server();
 
 server.addService(movieService, {
   GetTicketDetails: (call, callback) => {
     const { ticketPrice } = call.request;
 
-    const encodedResponse = GetTicketDetailsResponse.encode({ticketPrice}).finish();
+    const encodedResponse = GetTicketDetailsResponse.encode({
+      ticketPrice,
+    }).finish();
     console.log(encodedResponse);
     return callback(null, encodedResponse);
   },
 });
+
+server.addService(videoService, {
+  StreamVideoFile,
+});
+
 
 server.bindAsync(
   HOST_URL,

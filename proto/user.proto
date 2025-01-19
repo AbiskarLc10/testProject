@@ -17,6 +17,6 @@ message GetUserDetailsResponse {
 }
 service UserService{
 
-    rpc GetUserDetails(GetUserDetailsRequest) returns (GetUserDetailsResponse);
+    rpc GetUserDetails(GetUserDetailsRequest) returns (GetUserDetailsResponse) {};
 
 }

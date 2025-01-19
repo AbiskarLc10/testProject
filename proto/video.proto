@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package stream;
+
+message StreamVideoRequest {
+    string filePath = 1;
+}
+
+message VideoChunk {
+   bytes data = 1;
+}
+
+service VideoStreamService {
+    rpc StreamVideoFile (StreamVideoRequest) returns (stream VideoChunk) {};
+}
