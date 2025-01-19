@@ -29,25 +29,24 @@ const Proto = grpc.loadPackageDefinition(packageDefinations);
 const movieService = Proto.movie.MovieService.service;
 const videoService = Proto.stream.VideoStreamService.service;
 
-console.log(videoService);
 const server = new grpc.Server();
 
 server.addService(movieService, {
   GetTicketDetails: (call, callback) => {
     const { ticketPrice } = call.request;
 
-    const encodedResponse = GetTicketDetailsResponse.encode({
-      ticketPrice,
-    }).finish();
-    console.log(encodedResponse);
-    return callback(null, encodedResponse);
+    console.log(ticketPrice);
+    // const encodedResponse = GetTicketDetailsResponse.encode({
+    //   ticketPrice: ticketPrice,
+    // }).finish();
+    // console.log(encodedResponse);
+    return callback(null, { ticketPrice });
   },
 });
 
 server.addService(videoService, {
   StreamVideoFile,
 });
-
 
 server.bindAsync(
   HOST_URL,

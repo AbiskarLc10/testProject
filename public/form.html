@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form grpc</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div>
+      <h1>Ticket Pricing</h1>
+      <form class="form-div" action="/set-price" method="post">
+        <div class="form-group">
+          <label for="exampleInputMovie1">Movie Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="exampleInputMovieName"
+            placeholder="Enter movie name"
+          />
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPrice">Movie Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="exampleInputPrice"
+            placeholder="Enter ticket price"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
