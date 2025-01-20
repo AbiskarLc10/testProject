@@ -57,7 +57,6 @@ app.post("/set-price", async (req, res, next) => {
   const encodedData = Buffer.from(req.body.data, "base64");
 
   try {
-  
     const request = GetTicketDetailsRequest.decode(encodedData);
 
     movieClient.GetTicketDetails(request, (error, response) => {
@@ -70,7 +69,6 @@ app.post("/set-price", async (req, res, next) => {
       const encodedResponse =
         GetTicketDetailsResponse.encode(response).finish();
 
-        
       return res.status(201).json(encodedResponse);
     });
   } catch (error) {
@@ -83,20 +81,13 @@ app.post("/set-price", async (req, res, next) => {
   }
 });
 
+app.get("/getUserDetails", (req, res) => {
+  const filePath = path.resolve(__dirname, "../public/user.html");
+
+  return res.sendFile(filePath);
+});
+
 app.use(errorHandlerMiddleware);
 app.listen(port, () => {
   console.log(`Listening at port ${port}`);
 });
-
-// const main = () => {
-//   try {
-
-//       console.log(response);
-//       return;
-//     });
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
-
-// main();

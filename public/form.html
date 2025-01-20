@@ -44,7 +44,6 @@
       <div id="display-details"></div>
     </div>
 
-    <!-- <script src="./js/bundle.js"></script> -->
     <script type="module">
       console.log($root);
       const movieName = document.getElementById("movieName");
@@ -54,9 +53,51 @@
 
       const GetTicketDetailsResponse =
         $root.nested.movie.GetTicketDetailsResponse;
+      const GetTicketDetailsRequest =
+        $root.nested.movie.GetTicketDetailsRequest;
+
       console.log(GetTicketDetailsResponse);
+
+      function createErrorNode(message) {
+        const alertEle = document.createElement("div");
+        alertEle.classList.add("alert", "alert-danger");
+        alertEle.setAttribute("role", "alert");
+        alertEle.innerText = message;
+
+        return alertEle;
+      }
+
       async function handleSubmit(e) {
         e.preventDefault();
+
+        const ticketPriceRequest = {};
+
+        ticketPriceRequest[movieName.value] = Number(moviePrice.value);
+
+        console.log(ticketPriceRequest);
+        const err = GetTicketDetailsRequest.verify({
+          ticketPrice: ticketPriceRequest,
+        });
+
+        if (err) {
+          const errorNode = createErrorNode(
+            err.message || "Invalid data provided"
+          );
+
+          displayError.appendChild(errorNode);
+          return setTimeout(() => {
+            displayError.innerHTML = "";
+          }, 3000);
+        }
+
+        const request = GetTicketDetailsRequest.create({
+          ticketPrice: ticketPriceRequest,
+        });
+
+        console.log(request);
+
+        const encodedRequest = GetTicketDetailsRequest.encode(request).finish();
+        console.log("Encoded Request:", encodedRequest);
 
         const response = await fetch("http://localhost:3000/set-price", {
           method: "POST",
@@ -64,8 +105,7 @@
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            movieName: movieName.value,
-            price: Number(moviePrice.value),
+            data: btoa(String.fromCharCode.apply(null, encodedRequest)),
           }),
         });
 
@@ -92,10 +132,6 @@
             return displaydiv.appendChild(divEle);
           });
         } else {
-          const alertEle = document.createElement("div");
-          alertEle.classList.add("alert", "alert-danger");
-          alertEle.setAttribute("role", "alert");
-          alertEle.innerText = encodedData.message;
           displayError.appendChild(alertEle);
 
           setTimeout(() => {

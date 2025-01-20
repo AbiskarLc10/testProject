@@ -11,6 +11,7 @@ const {
 
 const bundledProto = require("../proto/bundle.js");
 const StreamVideoFile = require("./service/video/stream-video.js");
+const GetUserDetails = require("./service/user/get-user-details.js");
 
 const GetTicketDetailsResponse =
   bundledProto.nested.movie.GetTicketDetailsResponse;
@@ -28,6 +29,7 @@ const Proto = grpc.loadPackageDefinition(packageDefinations);
 
 const movieService = Proto.movie.MovieService.service;
 const videoService = Proto.stream.VideoStreamService.service;
+const userService = Proto.user.UserService.service;
 
 const server = new grpc.Server();
 
@@ -36,12 +38,13 @@ server.addService(movieService, {
     const { ticketPrice } = call.request;
 
     console.log(ticketPrice);
-    // const encodedResponse = GetTicketDetailsResponse.encode({
-    //   ticketPrice: ticketPrice,
-    // }).finish();
-    // console.log(encodedResponse);
+
     return callback(null, { ticketPrice });
   },
+});
+
+server.addService(userService, {
+  GetUserDetails,
 });
 
 server.addService(videoService, {
