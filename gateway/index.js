@@ -51,31 +51,14 @@ app.get("/set-price", (req, res) => {
 });
 
 app.post("/set-price", async (req, res, next) => {
-
-
   const GetTicketDetailsRequest = proto.nested.movie.GetTicketDetailsRequest;
   const GetTicketDetailsResponse = proto.nested.movie.GetTicketDetailsResponse;
 
-  const { movieName, price } = req.body;
+  const encodedData = Buffer.from(req.body.data, "base64");
 
-  const ticketPrice = {};
-
-  ticketPrice[movieName] = price;
   try {
-    const err = GetTicketDetailsRequest.verify({
-      ticketPrice,
-    });
-
-    if (err) {
-      throw Error(err);
-    }
-    const request = GetTicketDetailsRequest.create({
-      ticketPrice: ticketPrice,
-    });
-    console.log(request);
-
-    const encodedRequest = GetTicketDetailsRequest.encode(request).finish();
-    console.log("Encoded Request:", encodedRequest);
+  
+    const request = GetTicketDetailsRequest.decode(encodedData);
 
     movieClient.GetTicketDetails(request, (error, response) => {
       if (error) {
@@ -86,7 +69,8 @@ app.post("/set-price", async (req, res, next) => {
 
       const encodedResponse =
         GetTicketDetailsResponse.encode(response).finish();
-      console.log(encodedResponse);
+
+        
       return res.status(201).json(encodedResponse);
     });
   } catch (error) {
@@ -116,5 +100,3 @@ app.listen(port, () => {
 // };
 
 // main();
-
-
