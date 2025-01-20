@@ -11,9 +11,10 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
-    <!-- <script type="module" src="/dist/bundle.js"></script> -->
+    <script type="module" src="/dist/bundle.js"></script>
   </head>
   <body>
+    <div id="display-error"></div>
     <div>
       <h1>Ticket Pricing</h1>
       <form class="form-div" id="movie-form" action="#">
@@ -38,14 +39,22 @@
 
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
+
+      <h1>Ticket Details</h1>
+      <div id="display-details"></div>
     </div>
 
     <!-- <script src="./js/bundle.js"></script> -->
-    <script>
-      console.log(window.$root);
+    <script type="module">
+      console.log($root);
       const movieName = document.getElementById("movieName");
       const moviePrice = document.getElementById("moviePrice");
+      const displaydiv = document.getElementById("display-details");
+      const displayError = document.getElementById("display-error");
 
+      const GetTicketDetailsResponse =
+        $root.nested.movie.GetTicketDetailsResponse;
+      console.log(GetTicketDetailsResponse);
       async function handleSubmit(e) {
         e.preventDefault();
 
@@ -60,7 +69,39 @@
           }),
         });
 
+        console.log(response);
         const encodedData = await response.json();
+        console.log(encodedData);
+
+        if (response.ok) {
+          const decodedData = GetTicketDetailsResponse.decode(encodedData.data);
+
+          const ticketPrice = decodedData.ticketPrice;
+          const divEle = document.createElement("div");
+
+          Object.keys(ticketPrice).map((key) => {
+            const movieEle = document.createElement("h3");
+            const pEle = document.createElement("p");
+
+            movieEle.innerText = key;
+            pEle.innerText = ticketPrice[key];
+
+            divEle.appendChild(movieEle);
+            divEle.appendChild(pEle);
+
+            return displaydiv.appendChild(divEle);
+          });
+        } else {
+          const alertEle = document.createElement("div");
+          alertEle.classList.add("alert", "alert-danger");
+          alertEle.setAttribute("role", "alert");
+          alertEle.innerText = encodedData.message;
+          displayError.appendChild(alertEle);
+
+          setTimeout(() => {
+            displayError.innerHTML = "";
+          }, 3000);
+        }
       }
       document.getElementById("movie-form").addEventListener("submit", (e) => {
         handleSubmit(e);

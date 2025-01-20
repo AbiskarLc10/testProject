@@ -52,7 +52,7 @@ app.get("/set-price", (req, res) => {
 
 app.post("/set-price", async (req, res, next) => {
 
-  
+
   const GetTicketDetailsRequest = proto.nested.movie.GetTicketDetailsRequest;
   const GetTicketDetailsResponse = proto.nested.movie.GetTicketDetailsResponse;
 
@@ -116,3 +116,5 @@ app.listen(port, () => {
 // };
 
 // main();
+
+

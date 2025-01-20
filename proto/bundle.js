@@ -82,5 +82,4 @@ var $root = (
     },
   });
 
-window.$root = $root;
 module.exports = $root;
