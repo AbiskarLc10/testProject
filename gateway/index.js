@@ -44,24 +44,23 @@ app.get("/static-video", async (req, res, next) => {
   return res.sendFile(videoPath);
 });
 
-app.get("/set-price", (req,res) => {
+app.get("/set-price", (req, res) => {
   const filePath = path.resolve(__dirname, "../public/form.html");
 
   return res.sendFile(filePath);
 });
 
-
 app.post("/set-price", async (req, res, next) => {
+
+  
   const GetTicketDetailsRequest = proto.nested.movie.GetTicketDetailsRequest;
   const GetTicketDetailsResponse = proto.nested.movie.GetTicketDetailsResponse;
 
   const { movieName, price } = req.body;
 
-  console.log(req.body);
   const ticketPrice = {};
 
   ticketPrice[movieName] = price;
-  console.log(ticketPrice);
   try {
     const err = GetTicketDetailsRequest.verify({
       ticketPrice,
@@ -85,8 +84,6 @@ app.post("/set-price", async (req, res, next) => {
       }
       console.log(response);
 
-      // const decodedResponse = GetTicketDetailsResponse.decode(response);
-      // console.log(decodedResponse);
       const encodedResponse =
         GetTicketDetailsResponse.encode(response).finish();
       console.log(encodedResponse);
