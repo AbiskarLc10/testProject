@@ -7,6 +7,8 @@ const proto = require("../proto/bundle");
 const errorHandlerMiddleware = require("./middleware/error-middleware");
 const movieClient = require("./client/movieClient");
 const streamClient = require("./client/videoClient");
+const userClient = require("./client/userClient");
+const customErrorHandler = require("./handler/customErrorHandler");
 
 app.use(express.static(path.resolve("../public")));
 app.use(express.json());
@@ -85,6 +87,47 @@ app.get("/getUserDetails", (req, res) => {
   const filePath = path.resolve(__dirname, "../public/user.html");
 
   return res.sendFile(filePath);
+});
+
+app.post("/getUserDetails", async (req, res, next) => {
+  try {
+    const GetUserDetailsRequest = proto.nested.user.GetUserDetailsRequest;
+    const GetUserDetailsResponse = proto.nested.user.GetUserDetailsResponse;
+
+    const { data } = req.body;
+
+    const encodedData = Buffer.from(data, "base64");
+
+    const request = GetUserDetailsRequest.decode(encodedData);
+
+    const response = await new Promise((resolve, reject) => {
+      userClient.GetUserDetails(request, (error, response) => {
+        if (error) {
+          return reject({
+            details: error.details || error.message,
+            code: error.code,
+          });
+        }
+        resolve(response);
+      });
+    });
+
+    const encodedResponse = GetUserDetailsResponse.encode(response).finish();
+
+    return res
+      .status(201)
+      .json({ message: "Data received successfully", encodedResponse });
+
+  } catch (error) {
+    console.log(error);
+    return customErrorHandler(
+      {
+        message: error.details,
+        code: error.code,
+      },
+      next
+    );
+  }
 });
 
 app.use(errorHandlerMiddleware);

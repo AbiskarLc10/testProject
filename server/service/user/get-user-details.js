@@ -40,7 +40,7 @@ const GetUserDetails = async (call, callback) => {
       });
     }
 
-    return callback(null, user);
+    return callback(null, {user});
   } catch (error) {
     console.log(error);
     return callback({

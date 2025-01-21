@@ -14,6 +14,7 @@
     <script type="module" src="/dist/bundle.js"></script>
   </head>
   <body>
+    <div id="display-error"></div>
     <form action="#" id="user-details" class="form-div">
       <div class="form-group">
         <label for="exampleInputMovie1">Enter uid:</label>
@@ -26,10 +27,99 @@
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    <div>
+      <h3>User Details</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Username</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
 
     <script type="module">
+      const createUserTableRow = (user) => {
+        const tr = document.createElement("tr");
+        const th1 = document.createElement("td");
+        const th2 = document.createElement("td");
 
-    
+        th1.innerText = user.id;
+        th2.innerText = user.name;
+
+        tr.appendChild(th1);
+        tr.appendChild(th2);
+
+        return tr;
+      };
+
+      const createErrorNode = (message) => {
+        const div = document.createElement("div");
+
+        div.classList.add("alert", "alert-danger");
+        div.setAttribute("role", "alert");
+        div.innerText = message;
+
+        return div;
+      };
+      const userDet = document.getElementById("user-details");
+      const errorDiv = document.getElementById("display-error");
+      const tbody = document.getElementById("tbody");
+      const uId = document.getElementById("uid");
+
+      userDet.addEventListener("submit", async (e) => {
+        const GetUserDetailsRequest = $root.nested.user.GetUserDetailsRequest;
+        const GetUserDetailsResponse = $root.nested.user.GetUserDetailsResponse;
+
+        e.preventDefault();
+
+        const err = GetUserDetailsRequest.verify({
+          id: Number(uId.value),
+        });
+
+        if (err) {
+          const errorNode = createErrorNode("Invalid id");
+
+          errorDiv.appendChild(errorNode);
+
+          return setTimeout(() => {
+            errorDiv.innerHTML = "";
+          }, 2000);
+        }
+
+        const request = GetUserDetailsRequest.create({
+          id: uId.value,
+        });
+
+        console.log(request);
+
+        const encodedRequest = GetUserDetailsRequest.encode(request).finish();
+        console.log("Encoded Request:", encodedRequest);
+        const response = await fetch("http://localhost:3000/getUserDetails", {
+          method: "POST",
+          body: JSON.stringify({
+            data: btoa(String.fromCharCode.apply(null, encodedRequest)),
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          const responseData = await response.json();
+          console.log(responseData);
+
+          const decodedResponse = GetUserDetailsResponse.decode(
+            responseData.encodedResponse.data
+          );
+
+          const tableRow = createUserTableRow(decodedResponse.user);
+
+          return tbody.appendChild(tableRow);
+        }
+      });
     </script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
