@@ -4,7 +4,7 @@ const customErrorHandler = (error, next) => {
   if (error.code <= 16) {
     return next({
       message: error.message,
-      code: grpcErrorCodeMap[error.code],
+      code: grpcErrorCodeMap[error.code].httpStatus,
       details: error.details,
     });
   }
@@ -15,6 +15,5 @@ const customErrorHandler = (error, next) => {
     details: error.details || "Action Failed",
   });
 };
-
 
 module.exports = customErrorHandler;

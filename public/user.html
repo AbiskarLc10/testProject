@@ -34,6 +34,9 @@
           <tr>
             <th scope="col">Id</th>
             <th scope="col">Username</th>
+            <th scope="col">Email</th>
+            <th scope="col">Address</th>
+            <th scope="col">Age</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
@@ -43,15 +46,16 @@
     <script type="module">
       const createUserTableRow = (user) => {
         const tr = document.createElement("tr");
-        const th1 = document.createElement("td");
-        const th2 = document.createElement("td");
 
-        th1.innerText = user.id;
-        th2.innerText = user.name;
+        Object.keys(user).map((field)=>{
 
-        tr.appendChild(th1);
-        tr.appendChild(th2);
+          const td = document.createElement('td');
 
+          td.innerText = user[field];
+
+          return tr.appendChild(td)
+        })
+        
         return tr;
       };
 
@@ -106,9 +110,9 @@
             "Content-Type": "application/json",
           },
         });
+        const responseData = await response.json();
 
         if (response.ok) {
-          const responseData = await response.json();
           console.log(responseData);
 
           const decodedResponse = GetUserDetailsResponse.decode(
@@ -118,6 +122,14 @@
           const tableRow = createUserTableRow(decodedResponse.user);
 
           return tbody.appendChild(tableRow);
+        } else {
+          const errorNode = createErrorNode(responseData.message);
+
+          errorDiv.appendChild(errorNode);
+
+          return setTimeout(() => {
+            errorDiv.innerHTML = "";
+          }, 2000);
         }
       });
     </script>
