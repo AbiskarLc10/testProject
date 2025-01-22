@@ -13,6 +13,14 @@ message User{
     
 }
 
+message AddUserRequest {
+    User user  = 1;
+}
+
+message AddUserResponse {
+    string message = 1;
+    bool success = 2;
+}
 message GetUserDetailsRequest{
     int32 id = 1;
 }
@@ -22,5 +30,6 @@ message GetUserDetailsResponse {
 service UserService{
 
     rpc GetUserDetails(GetUserDetailsRequest) returns (GetUserDetailsResponse) {};
+    rpc AddUser(AddUserRequest) returns (AddUserResponse) {};
 
 }

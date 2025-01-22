@@ -64,6 +64,26 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           }
         }
       },
+      AddUserRequest: {
+        fields: {
+          user: {
+            type: "User",
+            id: 1
+          }
+        }
+      },
+      AddUserResponse: {
+        fields: {
+          message: {
+            type: "string",
+            id: 1
+          },
+          success: {
+            type: "bool",
+            id: 2
+          }
+        }
+      },
       GetUserDetailsRequest: {
         fields: {
           id: {
@@ -85,6 +105,10 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           GetUserDetails: {
             requestType: "GetUserDetailsRequest",
             responseType: "GetUserDetailsResponse"
+          },
+          AddUser: {
+            requestType: "AddUserRequest",
+            responseType: "AddUserResponse"
           }
         }
       }

@@ -46,6 +46,25 @@ app.get("/static-video", async (req, res, next) => {
   return res.sendFile(videoPath);
 });
 
+app.get("/add-user", (req, res) => {
+  const filePath = path.resolve(__dirname, "../public/adduser.html");
+
+  return res.sendFile(filePath);
+});
+
+app.post("/add-user", async (req, res, next) => {
+  try {
+
+    
+  } catch (error) {
+    console.log(error);
+    return customErrorHandler({
+      details: error.details || "Failed to add user",
+      message: error.message || "Error from server",
+      code: error.code || 500,
+    });
+  }
+});
 app.get("/set-price", (req, res) => {
   const filePath = path.resolve(__dirname, "../public/form.html");
 
@@ -117,7 +136,6 @@ app.post("/getUserDetails", async (req, res, next) => {
     return res
       .status(201)
       .json({ message: "Data received successfully", encodedResponse });
-
   } catch (error) {
     console.log(error);
     return customErrorHandler(

@@ -12,6 +12,7 @@ const {
 const bundledProto = require("../proto/bundle.js");
 const StreamVideoFile = require("./service/video/stream-video.js");
 const GetUserDetails = require("./service/user/get-user-details.js");
+const AddUser = require("./service/user/add-user-details.js");
 
 const GetTicketDetailsResponse =
   bundledProto.nested.movie.GetTicketDetailsResponse;
@@ -45,6 +46,7 @@ server.addService(movieService, {
 
 server.addService(userService, {
   GetUserDetails,
+  AddUser,
 });
 
 server.addService(videoService, {
