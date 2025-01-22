@@ -80,17 +80,27 @@
       const AddUserResponse = $root.nested.user.AddUserResponse;
 
       const formDetails = document.getElementById("form-details");
+      const messageDiv = document.getElementById("message-div");
       const uid = document.getElementById("uid");
       const name = document.getElementById("name");
       const email = document.getElementById("email");
       const address = document.getElementById("address");
       const age = document.getElementById("age");
 
+      function CreateMessageNode(message) {
+        const msgDiv = document.createElement("div");
+
+        msgDiv.innerText = message;
+        msgDiv.setAttribute("role", "alert");
+
+        return msgDiv;
+      }
+
       async function handleSubmit(e) {
         e.preventDefault();
 
         const user = {
-          id: uid.value,
+          id: Number(uid.value),
           name: name.value,
           email: email.value,
           address: address.value,
@@ -102,6 +112,7 @@
         });
 
         if (err) {
+          console.log(err);
           return alert("Invalid form data");
         }
 
@@ -121,6 +132,32 @@
             data: btoa(String.fromCharCode.apply(null, encodedRequest)),
           }),
         });
+
+        const responseData = await response.json();
+
+        console.log(responseData);
+        if (response.ok) {
+          const decodedResponse = AddUserResponse.decode(
+            responseData.data
+          );
+
+          const msg = CreateMessageNode(decodedResponse.message);
+
+          msg.classList.add("alert", "alert-success");
+          messageDiv.appendChild(msg);
+
+          setTimeout(() => {
+            messageDiv.innerHTML = "";
+          }, 2000);
+        } else {
+          const errormsg = CreateMessageNode(responseData.details);
+          errormsg.classList.add("alert", "alert-danger");
+
+          messageDiv.appendChild(errormsg);
+          setTimeout(() => {
+            messageDiv.innerHTML = "";
+          }, 2000);
+        }
       }
 
       formDetails.addEventListener("submit", (e) => handleSubmit(e));

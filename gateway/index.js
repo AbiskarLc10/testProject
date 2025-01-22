@@ -53,16 +53,43 @@ app.get("/add-user", (req, res) => {
 });
 
 app.post("/add-user", async (req, res, next) => {
-  try {
+  const AddUserRequest = proto.nested.user.AddUserRequest;
+  const AddUserResponse = proto.nested.user.AddUserResponse;
 
-    
+  const { data } = req.body;
+
+  const encodedRequestData = Buffer.from(data, "base64");
+  try {
+    const request = AddUserRequest.decode(encodedRequestData);
+
+    console.log(request);
+
+    const response = await new Promise((resolve, reject) => {
+      userClient.AddUser(request, (error, response) => {
+        if (error) {
+          reject({
+            details: error.details,
+            message: error.message,
+            code: error.code,
+          });
+        }
+        resolve(response);
+      });
+    });
+
+    const encodedResponse = AddUserResponse.encode(response).finish();
+
+    return res.status(201).json(encodedResponse);
   } catch (error) {
     console.log(error);
-    return customErrorHandler({
-      details: error.details || "Failed to add user",
-      message: error.message || "Error from server",
-      code: error.code || 500,
-    });
+    return customErrorHandler(
+      {
+        details: error.details || "Failed to add user",
+        message: error.message || "Error from server",
+        code: error.code || 500,
+      },
+      next
+    );
   }
 });
 app.get("/set-price", (req, res) => {

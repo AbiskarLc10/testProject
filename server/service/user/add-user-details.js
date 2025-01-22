@@ -1,4 +1,4 @@
-const fs = require("fs/promises");
+const fs = require("node:fs/promises");
 const grpc = require("@grpc/grpc-js");
 const path = require("path");
 
@@ -16,7 +16,7 @@ const AddUser = async (call, callback) => {
       });
     }
 
-    const checkIdExists = userDetails.find((user) => user.id === id);
+    const checkIdExists = userDetails.find((value,index)=> value.id === id);
 
     if (checkIdExists) {
       return callback({
@@ -25,7 +25,7 @@ const AddUser = async (call, callback) => {
       });
     }
 
-    const newUserDetails = [...userDetails, user];
+    const newUserDetails = [...userDetails,user];
 
     await fs.writeFile(
       path.resolve(__dirname, "../../dummydata/user.json"),
