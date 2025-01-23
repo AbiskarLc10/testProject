@@ -12,6 +12,8 @@ import {
   NumberInputStepper,
   FormErrorMessage,
 } from "@chakra-ui/react";
+import proto from "../../bundle1";
+
 const SignUp = () => {
 
   
@@ -22,7 +24,6 @@ const SignUp = () => {
   } = useForm();
 
   const onSubmit = (values) => {
-    
     console.log(values);
   };
   return (
@@ -39,7 +40,7 @@ const SignUp = () => {
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-2 w-[500px] p-4 "
           >
-            <FormControl  isInvalid={errors.name}>
+            <FormControl isInvalid={errors.name}>
               <FormLabel>Name</FormLabel>
               <Input
                 id="name"
@@ -86,7 +87,7 @@ const SignUp = () => {
               <FormErrorMessage>
                 {errors.password && errors.password.message}
               </FormErrorMessage>
-            </FormControl >
+            </FormControl>
             <FormControl isInvalid={errors.address}>
               <FormLabel>Address</FormLabel>
               <Input
@@ -104,7 +105,6 @@ const SignUp = () => {
             <FormControl isInvalid={errors.age}>
               <FormLabel>Age</FormLabel>
               <NumberInput
-                
                 max={100}
                 min={0}
                 name="age"

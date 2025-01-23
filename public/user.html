@@ -79,7 +79,7 @@
         e.preventDefault();
 
         const err = GetUserDetailsRequest.verify({
-          email: uid.value,
+          email: email.value,
         });
 
         if (err) {
@@ -93,7 +93,7 @@
         }
 
         const request = GetUserDetailsRequest.create({
-          id: email.value,
+          email: email.value,
         });
 
         console.log(request);
