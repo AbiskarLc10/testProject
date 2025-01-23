@@ -13,6 +13,7 @@ const bundledProto = require("../proto/bundle.js");
 const StreamVideoFile = require("./service/video/stream-video.js");
 const GetUserDetails = require("./service/user/get-user-details.js");
 const AddUser = require("./service/user/add-user-details.js");
+const sequelize = require("./db/connection.js");
 
 const GetTicketDetailsResponse =
   bundledProto.nested.movie.GetTicketDetailsResponse;
@@ -53,14 +54,22 @@ server.addService(videoService, {
   StreamVideoFile,
 });
 
-server.bindAsync(
-  HOST_URL,
-  grpc.ServerCredentials.createInsecure(),
-  (error, port) => {
-    if (error) {
-      console.log("Failed to connect to server ", error.cause);
-    } else {
-      console.log(`Server listening at port ${port}`);
-    }
-  }
-);
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Connected to database successfully");
+    server.bindAsync(
+      HOST_URL,
+      grpc.ServerCredentials.createInsecure(),
+      (error, port) => {
+        if (error) {
+          console.log("Failed to connect to server ", error.cause);
+        } else {
+          console.log(`Server listening at port ${port}`);
+        }
+      }
+    );
+  })
+  .catch((error) => {
+    console.log(`Connection failed : ${error}`);
+  });
