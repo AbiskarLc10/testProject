@@ -14,7 +14,11 @@ message User{
 }
 
 message AddUserRequest {
-    User user  = 1;
+    string name = 2;
+    string email = 3;
+    int32 age = 4;
+    string address = 5;
+    string password = 6;
 }
 
 message AddUserResponse {
@@ -22,7 +26,7 @@ message AddUserResponse {
     bool success = 2;
 }
 message GetUserDetailsRequest{
-    int32 id = 1;
+    string email = 1;
 }
 message GetUserDetailsResponse {
     User user = 1;

@@ -17,12 +17,12 @@
     <div id="display-error"></div>
     <form action="#" id="user-details" class="form-div">
       <div class="form-group">
-        <label for="exampleInputMovie1">Enter uid:</label>
+        <label for="exampleInputMovie1">Enter Email:</label>
         <input
           type="text"
           class="form-control"
-          id="uid"
-          placeholder="Enter user Id"
+          id="email"
+          placeholder="Enter user email"
         />
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
@@ -47,15 +47,14 @@
       const createUserTableRow = (user) => {
         const tr = document.createElement("tr");
 
-        Object.keys(user).map((field)=>{
-
-          const td = document.createElement('td');
+        Object.keys(user).map((field) => {
+          const td = document.createElement("td");
 
           td.innerText = user[field];
 
-          return tr.appendChild(td)
-        })
-        
+          return tr.appendChild(td);
+        });
+
         return tr;
       };
 
@@ -71,7 +70,7 @@
       const userDet = document.getElementById("user-details");
       const errorDiv = document.getElementById("display-error");
       const tbody = document.getElementById("tbody");
-      const uId = document.getElementById("uid");
+      const email = document.getElementById("email");
 
       userDet.addEventListener("submit", async (e) => {
         const GetUserDetailsRequest = $root.nested.user.GetUserDetailsRequest;
@@ -80,7 +79,7 @@
         e.preventDefault();
 
         const err = GetUserDetailsRequest.verify({
-          id: Number(uId.value),
+          email: uid.value,
         });
 
         if (err) {
@@ -94,7 +93,7 @@
         }
 
         const request = GetUserDetailsRequest.create({
-          id: uId.value,
+          id: email.value,
         });
 
         console.log(request);

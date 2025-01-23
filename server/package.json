@@ -17,6 +17,7 @@
     "npm": "^11.0.0",
     "protobufjs": "^7.4.0",
     "sequelize": "^6.37.5",
-    "sequelize-cli": "^6.6.2"
+    "sequelize-cli": "^6.6.2",
+    "uuid": "^11.0.5"
   }
 }

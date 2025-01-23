@@ -18,14 +18,14 @@
     <h1>Add User Details</h1>
     <form action="#" class="form-div" id="form-details">
       <div class="form-group">
-        <label for="id">User Id</label>
+        <!-- <label for="id">User Id</label>
         <input
           type="text"
           class="form-control"
           id="uid"
           placeholder="Enter user id"
           required
-        />
+        /> -->
       </div>
       <div class="form-group">
         <label for="exampleInputPrice">Name</label>
@@ -49,6 +49,16 @@
         <div id="emailHelp" class="form-text">
           We'll never share your email with anyone else.
         </div>
+      </div>
+      <div class="form-group">
+        <label for="examplePassword">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          placeholder="password"
+          required
+        />
       </div>
       <div class="form-group">
         <label for="exampleAddress">Address</label>
@@ -81,9 +91,9 @@
 
       const formDetails = document.getElementById("form-details");
       const messageDiv = document.getElementById("message-div");
-      const uid = document.getElementById("uid");
       const name = document.getElementById("name");
       const email = document.getElementById("email");
+      const password = document.getElementById("password");
       const address = document.getElementById("address");
       const age = document.getElementById("age");
 
@@ -100,15 +110,15 @@
         e.preventDefault();
 
         const user = {
-          id: Number(uid.value),
           name: name.value,
           email: email.value,
+          password: password.value,
           address: address.value,
           age: Number(age.value),
         };
 
         const err = AddUserRequest.verify({
-          user: user,
+          ...user,
         });
 
         if (err) {
@@ -117,7 +127,7 @@
         }
 
         const request = AddUserRequest.create({
-          user,
+          ...user,
         });
 
         console.log(request);
@@ -137,10 +147,13 @@
 
         console.log(responseData);
         if (response.ok) {
-          const decodedResponse = AddUserResponse.decode(
-            responseData.data
-          );
+          const decodedResponse = AddUserResponse.decode(responseData.data);
 
+          name.value = "";
+          email.value = "";
+          password.value = "";
+          address.value = "";
+          age.value = 0;
           const msg = CreateMessageNode(decodedResponse.message);
 
           msg.classList.add("alert", "alert-success");
