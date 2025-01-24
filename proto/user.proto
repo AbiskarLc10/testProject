@@ -31,9 +31,13 @@ message GetUserDetailsRequest{
 message GetUserDetailsResponse {
     User user = 1;
 }
+
+message emptyRequest{
+
+}
 service UserService{
 
     rpc GetUserDetails(GetUserDetailsRequest) returns (GetUserDetailsResponse) {};
     rpc AddUser(AddUserRequest) returns (AddUserResponse) {};
-
+    rpc GetStreamOfUsers(emptyRequest) returns (stream GetUserDetailsResponse) {};
 }

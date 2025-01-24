@@ -116,6 +116,9 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           }
         }
       },
+      emptyRequest: {
+        fields: {}
+      },
       UserService: {
         methods: {
           GetUserDetails: {
@@ -125,6 +128,11 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           AddUser: {
             requestType: "AddUserRequest",
             responseType: "AddUserResponse"
+          },
+          GetStreamOfUsers: {
+            requestType: "emptyRequest",
+            responseType: "GetUserDetailsResponse",
+            responseStream: true
           }
         }
       }

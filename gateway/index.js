@@ -175,6 +175,41 @@ app.post("/getUserDetails", async (req, res, next) => {
   }
 });
 
+app.get("/stream-users", async (req, res, next) => {
+  try {
+    const GetUserDetailsResponse = proto.nested.user.GetUserDetailsResponse;
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+
+    const call = userClient.GetStreamOfUsers({});
+
+    call.on("data", (data) => {
+      const encodedData = GetUserDetailsResponse.encode(data).finish();
+
+      console.log(encodedData);
+      res.write(
+        JSON.stringify({
+          data: btoa(String.fromCharCode.apply(null, encodedData)),
+        })
+      );
+    });
+
+    call.on("end", () => {
+      res.end();
+    });
+  } catch (error) {
+    console.log(error);
+    return customErrorHandler(
+      {
+        message: error.details,
+        code: error.code,
+      },
+      next
+    );
+  }
+});
+
 app.use(errorHandlerMiddleware);
 app.listen(port, () => {
   console.log(`Listening at port ${port}`);
