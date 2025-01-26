@@ -41,6 +41,7 @@
         </thead>
         <tbody id="tbody"></tbody>
       </table>
+      <button id="stream-details" type="button">Get Details</button>
     </div>
 
     <script type="module">
@@ -71,6 +72,7 @@
       const errorDiv = document.getElementById("display-error");
       const tbody = document.getElementById("tbody");
       const email = document.getElementById("email");
+      const streamBtn = document.getElementById("stream-details");
 
       userDet.addEventListener("submit", async (e) => {
         const GetUserDetailsRequest = $root.nested.user.GetUserDetailsRequest;
@@ -130,6 +132,13 @@
             errorDiv.innerHTML = "";
           }, 2000);
         }
+      });
+
+      streamBtn.addEventListener("click", async (e) => {
+        const response = await fetch("http://localhost:3000/stream-users", {
+          method: "GET",
+        });
+
       });
     </script>
     <script
