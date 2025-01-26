@@ -41,30 +41,29 @@
         </thead>
         <tbody id="tbody"></tbody>
       </table>
-      <button id="stream-details" type="button">Get Details</button>
     </div>
 
-    <script type="module">
-      const createUserTableRow = (user) => {
-        const tr = document.createElement("tr");
+  <script type="module">
+    const createUserTableRow = (user) => {
+      const tr = document.createElement("tr");
 
-        Object.keys(user).map((field) => {
-          const td = document.createElement("td");
+      Object.keys(user).map((field) => {
+        const td = document.createElement("td");
 
-          td.innerText = user[field];
+        td.innerText = user[field];
 
-          return tr.appendChild(td);
-        });
+        return tr.appendChild(td);
+      });
 
-        return tr;
-      };
+      return tr;
+    };
 
-      const createErrorNode = (message) => {
-        const div = document.createElement("div");
+    const createErrorNode = (message) => {
+      const div = document.createElement("div");
 
-        div.classList.add("alert", "alert-danger");
-        div.setAttribute("role", "alert");
-        div.innerText = message;
+      div.classList.add("alert", "alert-danger");
+      div.setAttribute("role", "alert");
+      div.innerText = message;
 
         return div;
       };
@@ -72,73 +71,65 @@
       const errorDiv = document.getElementById("display-error");
       const tbody = document.getElementById("tbody");
       const email = document.getElementById("email");
-      const streamBtn = document.getElementById("stream-details");
 
-      userDet.addEventListener("submit", async (e) => {
-        const GetUserDetailsRequest = $root.nested.user.GetUserDetailsRequest;
-        const GetUserDetailsResponse = $root.nested.user.GetUserDetailsResponse;
+    userDet.addEventListener("submit", async (e) => {
+      const GetUserDetailsRequest = $root.nested.user.GetUserDetailsRequest;
+      const GetUserDetailsResponse = $root.nested.user.GetUserDetailsResponse;
 
-        e.preventDefault();
+      e.preventDefault();
 
-        const err = GetUserDetailsRequest.verify({
-          email: email.value,
-        });
-
-        if (err) {
-          const errorNode = createErrorNode("Invalid id");
-
-          errorDiv.appendChild(errorNode);
-
-          return setTimeout(() => {
-            errorDiv.innerHTML = "";
-          }, 2000);
-        }
-
-        const request = GetUserDetailsRequest.create({
-          email: email.value,
-        });
-
-        console.log(request);
-
-        const encodedRequest = GetUserDetailsRequest.encode(request).finish();
-        console.log("Encoded Request:", encodedRequest);
-        const response = await fetch("http://localhost:3000/getUserDetails", {
-          method: "POST",
-          body: JSON.stringify({
-            data: btoa(String.fromCharCode.apply(null, encodedRequest)),
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const responseData = await response.json();
-
-        if (response.ok) {
-          console.log(responseData);
-
-          const decodedResponse = GetUserDetailsResponse.decode(
-            responseData.encodedResponse.data
-          );
-
-          const tableRow = createUserTableRow(decodedResponse.user);
-
-          return tbody.appendChild(tableRow);
-        } else {
-          const errorNode = createErrorNode(responseData.message);
-
-          errorDiv.appendChild(errorNode);
-
-          return setTimeout(() => {
-            errorDiv.innerHTML = "";
-          }, 2000);
-        }
+      const err = GetUserDetailsRequest.verify({
+        email: email.value,
       });
 
-      streamBtn.addEventListener("click", async (e) => {
-        const response = await fetch("http://localhost:3000/stream-users", {
-          method: "GET",
-        });
+      if (err) {
+        const errorNode = createErrorNode("Invalid id");
 
+        errorDiv.appendChild(errorNode);
+
+        return setTimeout(() => {
+          errorDiv.innerHTML = "";
+        }, 2000);
+      }
+
+      const request = GetUserDetailsRequest.create({
+        email: email.value,
+      });
+
+      console.log(request);
+
+      const encodedRequest = GetUserDetailsRequest.encode(request).finish();
+      console.log("Encoded Request:", encodedRequest);
+      const response = await fetch("http://localhost:3000/getUserDetails", {
+        method: "POST",
+        body: JSON.stringify({
+          data: btoa(String.fromCharCode.apply(null, encodedRequest)),
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const responseData = await response.json();
+
+      if (response.ok) {
+        console.log(responseData);
+
+        const decodedResponse = GetUserDetailsResponse.decode(
+          responseData.encodedResponse.data
+        );
+
+        const tableRow = createUserTableRow(decodedResponse.user);
+
+        return tbody.appendChild(tableRow);
+      } else {
+        const errorNode = createErrorNode(responseData.message);
+
+        errorDiv.appendChild(errorNode);
+
+          return setTimeout(() => {
+            errorDiv.innerHTML = "";
+          }, 2000);
+        }
       });
     </script>
     <script
