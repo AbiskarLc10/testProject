@@ -188,11 +188,7 @@ app.get("/stream-users", async (req, res, next) => {
       const encodedData = GetUserDetailsResponse.encode(data).finish();
 
       console.log(encodedData);
-      res.write(
-        JSON.stringify({
-          data: btoa(String.fromCharCode.apply(null, encodedData)),
-        })
-      );
+      res.write(encodedData);
     });
 
     call.on("end", () => {
