@@ -15,6 +15,7 @@
   </head>
   <body>
     <div id="display-error"></div>
+    <div id="message-div"></div>
     <div>
       <h1>Ticket Pricing</h1>
       <form class="form-div" id="movie-form" action="#">
@@ -28,15 +29,36 @@
           />
         </div>
         <div class="form-group">
-          <label for="exampleInputPrice">Movie Price</label>
+          <label for="exampleInputPrice">Price</label>
           <input
-            type="text"
+            type="number"
             class="form-control"
-            id="moviePrice"
+            id="ticketPrice"
             placeholder="Enter ticket price"
           />
         </div>
-
+        <div>
+          <div class="form-group">
+            <label for="moviedescription">Description</label>
+            <input
+              type="text"
+              class="form-control"
+              id="description"
+              placeholder="Enter movie description"
+            />
+          </div>
+        </div>
+        <div>
+          <div class="form-group">
+            <label for="stock">Stock</label>
+            <input
+              type="number"
+              class="form-control"
+              id="stock"
+              placeholder="Enter tickets stock"
+            />
+          </div>
+        </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
 
@@ -45,18 +67,20 @@
     </div>
 
     <script type="module">
-      console.log($root);
       const movieName = document.getElementById("movieName");
-      const moviePrice = document.getElementById("moviePrice");
+      const ticketPrice = document.getElementById("ticketPrice");
+      const stock = document.getElementById("stock");
+      const description = document.getElementById("description");
       const displaydiv = document.getElementById("display-details");
       const displayError = document.getElementById("display-error");
+      const messageDiv = document.getElementById("message-div");
 
       const GetTicketDetailsResponse =
         $root.nested.movie.GetTicketDetailsResponse;
       const GetTicketDetailsRequest =
         $root.nested.movie.GetTicketDetailsRequest;
-
-      console.log(GetTicketDetailsResponse);
+      const AddTicketRequest = $root.nested.movie.AddTicketRequest;
+      const AddTicketResponse = $root.nested.movie.AddTicketResponse;
 
       function createErrorNode(message) {
         const alertEle = document.createElement("div");
@@ -64,12 +88,25 @@
         alertEle.setAttribute("role", "alert");
         alertEle.innerText = message;
 
-        return alertEle;
+        displayError.appendChild(alertEle);
+        return setTimeout(() => {
+          displayError.innerHTML = "";
+        }, 3000);
       }
 
-      async function handleSubmit(e) {
-        e.preventDefault();
+      function createMessageNode(message) {
+        const msgEle = document.createElement("div");
+        msgEle.classList.add("alert", "alert-success");
+        msgEle.setAttribute("role", "alert");
+        msgEle.innerText = message;
 
+        messageDiv.appendChild(msgEle);
+        return setTimeout(() => {
+          messageDiv.innerHTML = "";
+        }, 2000);
+      }
+
+      async function getTicketDetails() {
         const ticketPriceRequest = {};
 
         ticketPriceRequest[movieName.value] = Number(moviePrice.value);
@@ -80,14 +117,7 @@
         });
 
         if (err) {
-          const errorNode = createErrorNode(
-            err.message || "Invalid data provided"
-          );
-
-          displayError.appendChild(errorNode);
-          return setTimeout(() => {
-            displayError.innerHTML = "";
-          }, 3000);
+          return createErrorNode(err.message || "Invalid data provided");
         }
 
         const request = GetTicketDetailsRequest.create({
@@ -137,6 +167,48 @@
           setTimeout(() => {
             displayError.innerHTML = "";
           }, 3000);
+        }
+      }
+      async function handleSubmit(e) {
+        e.preventDefault();
+
+        const addTicketRequestData = {
+          movieName: movieName.value,
+          price: Number(ticketPrice.value),
+          description: description.value,
+          stock: Number(stock.value),
+        };
+        const err = AddTicketRequest.verify(addTicketRequestData);
+
+        if (err) {
+          console.log(err);
+          return createErrorNode(err || "Invalid data provided");
+        }
+
+        const request = AddTicketRequest.create(addTicketRequestData);
+
+        const encodedRequest = AddTicketRequest.encode(request).finish();
+        console.log("Encoded Request:", encodedRequest);
+        const response = await fetch("http://localhost:3000/add-ticket", {
+          method: "POST",
+          body: JSON.stringify({
+            data: btoa(String.fromCharCode.apply(null, encodedRequest)),
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        const responseData = await response.json();
+
+        if (response.ok) {
+          const decodedResponse = await AddTicketResponse.decode(
+            responseData.data
+          );
+
+          return createMessageNode(decodedResponse.message);
+        } else {
+          return createErrorNode(responseData.details);
         }
       }
       document.getElementById("movie-form").addEventListener("submit", (e) => {

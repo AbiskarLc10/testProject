@@ -55,18 +55,16 @@ const AddUser = async (call, callback) => {
       }
     );
 
-    // const newUserDetails = [...userDetails,user];
-
-    // await fs.writeFile(
-    //   path.resolve(__dirname, "../../dummydata/user.json"),
-    //   JSON.stringify(newUserDetails, null, 2)
-    // );
     if (affectedRows === 1) {
       await transaction.commit();
       return callback(null, {
         message: "User Added successfully",
         success: true,
       });
+    } else {
+      throw {
+        details: "Something went wrong",
+      };
     }
   } catch (error) {
     console.log(error);

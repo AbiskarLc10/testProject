@@ -4,14 +4,34 @@ package movie;
 
 
 message GetTicketDetailsRequest{
-    map<string,int32> ticketPrice = 2;
-}
-
-message GetTicketDetailsResponse{
-    map<string,int32> ticketPrice = 2;
+    string id = 1;
 }
 
 
+message AddTicketRequest {
+
+   string movieName = 1;
+   double price = 2;
+   string description = 3;
+   int32 stock = 4;
+}
+
+message TicketInfo {
+    double price = 1;
+    bool available = 2;
+    string description = 3;
+    string movieName = 4;
+    int32 stock = 5;
+}
+
+message GetTicketDetailsResponse {
+    map<string, TicketInfo> ticketPrice = 2;  
+}
+message AddTicketResponse {
+    string message = 1;
+    bool success = 2;
+}
 service MovieService {
     rpc GetTicketDetails(GetTicketDetailsRequest) returns (GetTicketDetailsResponse) {};
+    rpc AddTicket(AddTicketRequest) returns (AddTicketResponse) {};
 }

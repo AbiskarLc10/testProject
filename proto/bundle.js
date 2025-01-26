@@ -1,4 +1,4 @@
- 
+/*eslint-disable block-scoped-var, id-length, no-control-regex, no-magic-numbers, no-prototype-builtins, no-redeclare, no-shadow, no-var, sort-vars*/
 "use strict";
 
 var $protobuf = require("protobufjs/light");
@@ -12,10 +12,53 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
     nested: {
       GetTicketDetailsRequest: {
         fields: {
-          ticketPrice: {
-            keyType: "string",
-            type: "int32",
+          id: {
+            type: "string",
+            id: 1
+          }
+        }
+      },
+      AddTicketRequest: {
+        fields: {
+          movieName: {
+            type: "string",
+            id: 1
+          },
+          price: {
+            type: "double",
             id: 2
+          },
+          description: {
+            type: "string",
+            id: 3
+          },
+          stock: {
+            type: "int32",
+            id: 4
+          }
+        }
+      },
+      TicketInfo: {
+        fields: {
+          price: {
+            type: "double",
+            id: 1
+          },
+          available: {
+            type: "bool",
+            id: 2
+          },
+          description: {
+            type: "string",
+            id: 3
+          },
+          movieName: {
+            type: "string",
+            id: 4
+          },
+          stock: {
+            type: "int32",
+            id: 5
           }
         }
       },
@@ -23,7 +66,19 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
         fields: {
           ticketPrice: {
             keyType: "string",
-            type: "int32",
+            type: "TicketInfo",
+            id: 2
+          }
+        }
+      },
+      AddTicketResponse: {
+        fields: {
+          message: {
+            type: "string",
+            id: 1
+          },
+          success: {
+            type: "bool",
             id: 2
           }
         }
@@ -33,6 +88,10 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
           GetTicketDetails: {
             requestType: "GetTicketDetailsRequest",
             responseType: "GetTicketDetailsResponse"
+          },
+          AddTicket: {
+            requestType: "AddTicketRequest",
+            responseType: "AddTicketResponse"
           }
         }
       }
@@ -43,7 +102,7 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
       User: {
         fields: {
           id: {
-            type: "int32",
+            type: "string",
             id: 1
           },
           name: {
@@ -168,6 +227,7 @@ var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = new $pr
     }
   }
 });
+
 
 
 module.exports = $root;

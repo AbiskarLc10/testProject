@@ -92,40 +92,47 @@ app.post("/add-user", async (req, res, next) => {
     );
   }
 });
-app.get("/set-price", (req, res) => {
+app.get("/add-ticket", (req, res) => {
   const filePath = path.resolve(__dirname, "../public/form.html");
 
   return res.sendFile(filePath);
 });
 
-app.post("/set-price", async (req, res, next) => {
-  const GetTicketDetailsRequest = proto.nested.movie.GetTicketDetailsRequest;
-  const GetTicketDetailsResponse = proto.nested.movie.GetTicketDetailsResponse;
+app.post("/add-ticket", async (req, res, next) => {
+  const AddTicketRequest = proto.nested.movie.AddTicketRequest;
+  const AddTicketResponse = proto.nested.movie.AddTicketResponse;
 
   const encodedData = Buffer.from(req.body.data, "base64");
 
   try {
-    const request = GetTicketDetailsRequest.decode(encodedData);
+    const request = AddTicketRequest.decode(encodedData);
 
-    movieClient.GetTicketDetails(request, (error, response) => {
+    movieClient.AddTicket(request, (error, response) => {
       if (error) {
-        console.log(error);
-        return;
+        return customErrorHandler(
+          {
+            details: error.details || error.message,
+            code: error.code,
+          },
+          next
+        );
       }
       console.log(response);
 
-      const encodedResponse =
-        GetTicketDetailsResponse.encode(response).finish();
+      const encodedResponse = AddTicketResponse.encode(response).finish();
 
       return res.status(201).json(encodedResponse);
     });
   } catch (error) {
     console.log(error);
-    return next({
-      message: "Failed to set price",
-      code: 500,
-      details: "Something went wrong",
-    });
+    return customErrorHandler(
+      {
+        message: error.message || "Failed to set price",
+        code: error.code || 500,
+        details: error.details || "Something went wrong",
+      },
+      next
+    );
   }
 });
 

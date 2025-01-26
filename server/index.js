@@ -15,6 +15,7 @@ const GetUserDetails = require("./service/user/get-user-details.js");
 const AddUser = require("./service/user/add-user-details.js");
 const sequelize = require("./db/connection.js");
 const GetStreamOfUsers = require("./service/user/stream-user-details.js");
+const AddTicket = require("./service/ticket/add-ticket.js");
 
 const GetTicketDetailsResponse =
   bundledProto.nested.movie.GetTicketDetailsResponse;
@@ -44,6 +45,7 @@ server.addService(movieService, {
 
     return callback(null, { ticketPrice });
   },
+  AddTicket,
 });
 
 server.addService(userService, {
